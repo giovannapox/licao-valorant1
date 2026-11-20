@@ -1,0 +1,389 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<meta charset="utf-8">
+<title>Lição de Casa: Comms e Utilidade</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
+<style>
+/* Layout: uma coluna de leitura — resumo compacto em fichas por função, depois a prova numerada com placar fixo no fim */
+:root {
+  --bg: #eef1f4;
+  --surface: #ffffff;
+  --ink: #18212b;
+  --muted: #5b6876;
+  --line: #d3dae2;
+  --accent: #1f5f8b;
+  --accent-ink: #ffffff;
+  --duel: #c2412d;
+  --init: #2b8a6e;
+  --ctrl: #6a4fb3;
+  --sent: #b7791f;
+  --igl: #1f5f8b;
+  --ok: #1e8a4c;
+  --ok-bg: #e3f4ea;
+  --bad: #c0362c;
+  --bad-bg: #fbe7e5;
+  --font-display: "Chakra Petch", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Inter", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11161c; --surface: #1a2129; --ink: #e6ebf0; --muted: #9aa7b4; --line: #2c3742;
+    --accent: #5aa3d6; --accent-ink: #0d1318;
+    --duel: #ec7a66; --init: #5cc4a3; --ctrl: #a690e6; --sent: #e0a84f; --igl: #5aa3d6;
+    --ok: #5ccf8c; --ok-bg: #173325; --bad: #f07a70; --bad-bg: #3a1c1a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11161c; --surface: #1a2129; --ink: #e6ebf0; --muted: #9aa7b4; --line: #2c3742;
+  --accent: #5aa3d6; --accent-ink: #0d1318;
+  --duel: #ec7a66; --init: #5cc4a3; --ctrl: #a690e6; --sent: #e0a84f; --igl: #5aa3d6;
+  --ok: #5ccf8c; --ok-bg: #173325; --bad: #f07a70; --bad-bg: #3a1c1a;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.55; }
+.wrap { max-width: 760px; margin: 0 auto; padding-block: 32px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 40px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; line-height: 1.15; }
+h1 { font-size: clamp(30px, 6vw, 44px); font-weight: 700; letter-spacing: -0.01em; }
+h2 { font-size: 26px; font-weight: 700; }
+h3 { font-size: 18px; font-weight: 600; }
+p { margin: 0; }
+.eyebrow { font-family: var(--font-display); font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+header { display: flex; flex-direction: column; gap: 12px; }
+header .lead { color: var(--muted); max-width: 60ch; }
+.steps { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.steps span { font-size: 13px; padding: 4px 10px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); background: var(--surface); }
+section { display: flex; flex-direction: column; gap: 16px; }
+
+.roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr)); gap: 12px; }
+.role { background: var(--surface); border: 1px solid var(--line); border-top: 4px solid var(--c); border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.role .tag { font-family: var(--font-display); font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--c); }
+.role ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; font-size: 15px; }
+.role .call { font-size: 14px; color: var(--muted); border-left: 2px solid var(--c); padding-left: 10px; font-style: italic; }
+.role .agents { font-size: 13px; color: var(--muted); }
+
+.rule { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+.formula { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.formula div { border: 1px solid var(--line); border-radius: 6px; padding: 10px; text-align: center; }
+.formula b { display: block; font-family: var(--font-display); font-size: 18px; color: var(--accent); }
+.formula small { color: var(--muted); font-size: 14px; }
+.bullets { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; }
+
+/* Prova */
+.who { display: flex; flex-direction: column; gap: 6px; }
+.who label { font-weight: 600; font-size: 15px; }
+input[type="text"] { font: inherit; padding: 10px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); max-width: 360px; width: 100%; }
+input[type="text"]:focus-visible, button:focus-visible, .opt input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+ol.quiz { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 14px; counter-reset: q; }
+.q { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+.q-head { display: flex; gap: 12px; align-items: baseline; }
+.q-num { font-family: var(--font-display); font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; min-width: 2ch; }
+.q-text { font-weight: 600; }
+.q-scene { font-size: 13px; color: var(--muted); font-family: var(--font-display); letter-spacing: 0.06em; text-transform: uppercase; }
+.opts { display: flex; flex-direction: column; gap: 6px; }
+.opt { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px solid var(--line); border-radius: 6px; cursor: pointer; transition: border-color .15s, background .15s; }
+.opt:hover { border-color: var(--accent); }
+.opt input { margin-top: 4px; accent-color: var(--accent); flex: none; }
+.opt span { min-width: 0; }
+.opt:has(input:checked) { border-color: var(--accent); }
+.q.graded .opt { cursor: default; }
+.opt.is-right { background: var(--ok-bg); border-color: var(--ok); }
+.opt.is-wrong { background: var(--bad-bg); border-color: var(--bad); }
+.verdict { font-weight: 600; font-size: 14px; }
+.verdict.ok { color: var(--ok); }
+.verdict.bad { color: var(--bad); }
+.explain { font-size: 14px; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 10px; }
+.explain b { color: var(--ink); }
+
+.actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+button { font: 600 15px var(--font-body); padding: 12px 20px; border-radius: 6px; border: 1px solid var(--accent); cursor: pointer; }
+.primary { background: var(--accent); color: var(--accent-ink); }
+.ghost { background: transparent; color: var(--accent); }
+.note { font-size: 14px; color: var(--bad); }
+
+.result { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+.score-row { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; }
+.score { font-family: var(--font-display); font-size: 56px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+.score small { font-size: 24px; color: var(--muted); }
+.rank { display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1 1 220px; }
+.rank b { font-family: var(--font-display); font-size: 20px; }
+.bar { height: 8px; border-radius: 4px; background: var(--line); overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--ok); width: 0; transition: width .6s ease; }
+.copybox { font-family: ui-monospace, Consolas, monospace; font-size: 13px; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 10px; white-space: pre-wrap; word-break: break-word; }
+.small { font-size: 14px; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+@media (max-width: 480px) { .formula { grid-template-columns: 1fr; } .score { font-size: 46px; } }
+</style>
+<style>
+.pairs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pairs div { border-radius: 6px; padding: 8px 10px; font-size: 14px; min-width: 0; }
+.pairs .say { background: var(--ok-bg); border: 1px solid var(--ok); }
+.pairs .dont { background: var(--bad-bg); border: 1px solid var(--bad); }
+.pairs b { display: block; font-family: var(--font-display); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; }
+.pairs .say b { color: var(--ok); }
+.pairs .dont b { color: var(--bad); }
+@media (max-width: 480px) { .pairs { grid-template-columns: 1fr; } }
+</style>
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Lição de casa · antes do próximo treino</span>
+    <h1>Comms e utilidade: onde a gente perde round</h1>
+    <p class="lead">O treino de hoje caiu, então fica essa lição. Ela foca nos dois pontos que mais custam round pro time: o que a gente fala (e deixa de falar) e como a gente gasta habilidade. Leia o resumo, responda a provinha e mande seu resultado no grupo.</p>
+    <div class="steps"><span>1 · Ler o resumo</span><span>2 · Responder 12 situações</span><span>3 · Corrigir e mandar o resultado</span></div>
+  </header>
+
+  <section aria-labelledby="resumo">
+    <span class="eyebrow">Parte 1</span>
+    <h2 id="resumo">Resumo: três hábitos</h2>
+    <div class="roles">
+      <article class="role" style="--c: var(--init)">
+        <span class="tag">1 · Comunicação que vira informação</span>
+        <ul>
+          <li><b>Dano dado:</b> inimigo machucado é alvo fácil. "Jett -120, foi pro CT."</li>
+          <li><b>Utilidade inimiga gasta:</b> o que eles gastaram não volta naquele round. "Sova já jogou o dardo no B."</li>
+          <li><b>Avise antes de agir:</b> "Flash saindo no A main, virem." "Vou lurkar pelo mid."</li>
+          <li><b>Peça com nome e lugar:</b> "Omen, smoke no CT que eu entro."</li>
+          <li><b>Seus recursos, na compra:</b> "Tenho ult." "Tô sem flash." "Só tenho 2.000."</li>
+        </ul>
+        <div class="pairs">
+          <div class="say"><b>Fale assim</b>"Jett -120, foi pro CT."</div>
+          <div class="dont"><b>Evite</b>"Quase matei, mano!"</div>
+          <div class="say"><b>Fale assim</b>"Flash saindo, virem."</div>
+          <div class="dont"><b>Evite</b>Jogar a flash calado e cegar o time.</div>
+        </div>
+      </article>
+      <article class="role" style="--c: var(--ctrl)">
+        <span class="tag">2 · Utilidade com propósito</span>
+        <ul>
+          <li><b>Utilidade antes de bala:</b> limpe o ângulo com drone, dardo, flash ou molly antes de dar peek.</li>
+          <li><b>Sem alvo, sem utilidade:</b> jogar tudo no começo do round sem informação é desperdício.</li>
+          <li><b>Combo no mesmo momento:</b> smoke, flash e entrada juntas. Separadas, cada uma perde o efeito.</li>
+          <li><b>Guarde algo pro fim:</b> uma molly pra negar o defuse ou uma flash pra retake decide round.</li>
+          <li><b>Kit completo tem habilidade:</b> em full buy, rifle sem utilidade é kit pela metade.</li>
+        </ul>
+        <div class="pairs">
+          <div class="say"><b>Faça assim</b>Drone no canto, depois peek.</div>
+          <div class="dont"><b>Evite</b>Peek seco num canto que podia ser limpo.</div>
+        </div>
+      </article>
+      <article class="role" style="--c: var(--sent)">
+        <span class="tag">3 · Recursos do time e do inimigo</span>
+        <ul>
+          <li><b>Ults do time:</b> o placar (Tab) mostra quem tem ult. Use isso pra montar o plano do round.</li>
+          <li><b>Ults do inimigo:</b> o Tab também mostra as deles. "Raze com ult", "Killjoy com ult" muda a escolha do site.</li>
+          <li><b>Orbs de ult:</b> combinem quem pega e avise: "Peguei o orb."</li>
+          <li><b>Utilidade inimiga denuncia posição:</b> torreta da Killjoy no B indica Killjoy perto do B.</li>
+        </ul>
+        <div class="pairs">
+          <div class="say"><b>Fale assim</b>"Breach deles com ult, cuidado no retake."</div>
+          <div class="dont"><b>Evite</b>Descobrir a ult inimiga quando ela já te pegou.</div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section aria-labelledby="prova">
+    <span class="eyebrow">Parte 2</span>
+    <h2 id="prova">Provinha</h2>
+    <p class="small">São situações de jogo, e mais de uma alternativa parece certa. Escolha a <b>melhor</b>. Quando terminar, clique em <b>Corrigir</b> para ver a nota e o gabarito comentado.</p>
+    <div class="who">
+      <label for="player">Seu nick</label>
+      <input type="text" id="player" placeholder="ex.: fulano#BR1" autocomplete="nickname">
+    </div>
+    <form id="quiz" novalidate>
+      <ol class="quiz" id="questions"></ol>
+      <div class="actions" style="margin-top:20px">
+        <button type="submit" class="primary" id="grade">Corrigir</button>
+        <span class="note" id="missing" hidden></span>
+      </div>
+    </form>
+  </section>
+
+  <section id="result" class="result" hidden aria-live="polite">
+    <span class="eyebrow">Resultado</span>
+    <div class="score-row">
+      <div class="score" id="score">0<small>/12</small></div>
+      <div class="rank">
+        <b id="rank-title"></b>
+        <p class="small" id="rank-text"></p>
+        <div class="bar"><i id="bar"></i></div>
+      </div>
+    </div>
+    <p class="small">Copie o texto abaixo e mande no grupo do time:</p>
+    <div class="copybox" id="copytext"></div>
+    <div class="actions">
+      <button type="button" class="primary" id="copy">Copiar resultado</button>
+      <button type="button" class="ghost" id="retry">Refazer a prova</button>
+      <span class="small" id="copied" hidden></span>
+    </div>
+  </section>
+</div>
+
+<script>
+const QUESTIONS = [
+  { scene: "Morte · 2 segundos de fala", q: "Você foi o primeiro a cair no retake do A. A Jett te matou do Heaven, usou o dash pra chegar lá e ficou com 40 de vida. O Omen deles acabou de smokar o CT. O que você fala?",
+    o: ["\"Jett no Heaven, sem dash.\"", "\"Jett no Heaven, usou o dash, tá 40, Omen smokou CT, acho que tem mais um no default.\"", "\"Jett Heaven, 40.\"", "\"Jett com 40, cuidado com ela.\""],
+    a: 2, e: "Quem, onde e estado em menos de 2 segundos. A B tem mais informação, mas leva uns 6 segundos, cobre os passos e o \"acho que\" pode ser chute. A A esconde a informação mais útil (40 de vida), e a D não diz onde ela está." },
+  { scene: "Flash pra entrada", q: "Você é a Skye e vai flashar pro Raze entrar no A main. Como fazer?",
+    o: ["Contar \"3, 2, 1, vai\" e soltar a flash pra ela estourar no \"vai\"", "Soltar a flash e falar \"flashando\" na hora, pro Raze sair assim que ouvir", "Soltar sem falar nada: o Raze ouve o som da flash e sabe a hora de sair", "Esperar o Raze pedir \"flash\" e soltar no mesmo instante em que ele pedir"],
+    a: 0, e: "A flash tem que estourar no exato momento em que o Raze sai. Avisar só ao soltar (B) ou contar com o som (C) faz ele sair atrasado e a flash já passou. Na D, quem decide o tempo é quem está entrando, mas aí a flash sai sempre meio segundo depois do pedido." },
+  { scene: "Execute · ordem da utilidade", q: "Execute no B. O time tem smoke, flash e molly. Qual ordem funciona melhor?",
+    o: ["Flash primeiro pra cegar quem está no site, e a smoke depois cobre a entrada", "Tudo no mesmo segundo, pra o inimigo não ter tempo nenhum de reagir", "Molly no default primeiro, esperar queimar, e só então smoke e flash juntas", "Smoke formada antes, depois flash e molly, entrada colada na flash"],
+    a: 3, e: "A smoke precisa estar formada antes, pra cortar as linhas de tiro. A flash vem depois e a entrada sai colada nela. Tudo junto (B) parece eficiente, mas a smoke ainda está abrindo quando a flash estoura. Esperar a molly queimar (C) gasta o tempo da smoke." },
+  { scene: "Retake 3v2", q: "Retake 3v2 no A, spike plantado e 30 segundos no relógio. Você tem uma flash e o Omen tem duas smokes. Como entrar?",
+    o: ["Entrar rápido os três, porque 30 segundos não dá tempo de montar utilidade", "Smoke nas posições longas de pós-plant, flash e os três entram juntos", "Flash primeiro pra pegar eles desprevenidos, e smoke depois de já estar dentro", "Um entra na frente pra pegar info, e os outros dois seguem a call dele"],
+    a: 1, e: "O defuse leva 7 segundos, então 30 dá tempo pra usar utilidade. Entrar correndo (A) ou mandar um na frente (D) joga fora a vantagem de 3v2. Smokar depois de entrar (C) deixa vocês expostos às posições longas na hora da entrada." },
+  { scene: "Clutch do colega", q: "Seu colega está num 1v2. Vocês mortos estão vendo um inimigo ir plantar e o outro se escondendo no CT. O que o time morto faz?",
+    o: ["Silêncio total: o clutch é dele e qualquer voz atrapalha os passos", "Narrar o que estão vendo a cada movimento, pra ele ter a informação toda", "Dizer qual jogada ele deve fazer, já que vocês veem o mapa inteiro", "Uma call curta, uma vez só: \"Um no spike, outro no CT\""],
+    a: 3, e: "Muita gente acha que o certo é silêncio total (A), mas uma info curta, falada uma vez, vale ouro. Narrar tudo (B) cobre os passos. Mandar na jogada (C) tira o foco de quem está vendo a tela de verdade." },
+  { scene: "Ler o inimigo", q: "Round 8. Nos últimos três rounds de defesa no B, a Killjoy deles deixou a torreta no mesmo lugar. Quem fala e quando?",
+    o: ["Só o IGL: é ele que planeja, e provavelmente ele já reparou nisso", "Quem vir a torreta no próximo round, na hora em que ela aparecer", "Qualquer um, entre os rounds, pra planejar a utilidade em cima dela", "Ninguém: ela vai mudar o lugar da torreta no próximo round mesmo"],
+    a: 2, e: "Padrão do inimigo se fala entre rounds, quando dá pra planejar (\"dardo na torreta antes de entrar\"). Na hora (B) já é tarde pra planejar. O IGL não vê tudo (A), e se a Killjoy repetiu três vezes, vale assumir que ela repete (D)." },
+  { scene: "Cegado", q: "Você está segurando o A long e leva uma flash inimiga em cheio. O que faz?",
+    o: ["Fica parado mirando na altura da cabeça, porque eles vão peekar", "Recua pra trás da cobertura e avisa \"cego, saí do long\"", "Spraya no ângulo pra segurar o peek", "Fica quieto e espera a visão voltar"],
+    a: 1, e: "Cego, você perde quase todo duelo. Recuar e avisar deixa o time cobrir o buraco. Segurar na mira (A) e sprayar (C) às vezes funciona, mas geralmente é morte de graça, e ficar quieto (D) deixa o time achando que o long está seguro." },
+  { scene: "Sem o recurso pedido", q: "O duelista pede \"flash pra mim no main\", mas você, iniciador, já gastou as flashes. O que responde?",
+    o: ["\"Sem flash, tenho drone: limpo o canto e você entra no 'vai'\"", "\"Sem flash.\" e deixa o duelista decidir o que fazer com isso", "Não responde: joga a habilidade que tem e o duelista entende na hora", "\"Sem flash, espera o próximo round que aí eu compro as duas\""],
+    a: 0, e: "Diga o que não tem e ofereça o que tem, já com o plano. Só \"sem flash\" (B) é honesto, mas deixa o duelista sem alternativa. Ficar quieto (C) faz ele esperar uma flash que não vem." },
+  { scene: "Force buy", q: "Round de force: dá pra Spectre e colete leve. Sobram uns 400 créditos. O que fazer com eles?",
+    o: ["Guardar: no próximo round esses créditos podem completar um full buy", "Dropar pro colega que ficou mais pobre, pra ajudar a economia dele", "Tentar trocar o colete leve pelo pesado, que protege mais no duelo", "Comprar uma habilidade barata que ajuda a ganhar duelo, tipo flash"],
+    a: 3, e: "No force, a arma é pior que a do inimigo, então a utilidade é o que equilibra o duelo. 400 créditos guardados mudam pouco no próximo round (A), e um drop de 400 não compra nada útil pra ninguém (B)." },
+  { scene: "Info incerta", q: "Qual dessas calls atrapalha mais o time?",
+    o: ["\"Passos no B, pelo menos dois.\"", "\"Ouvi a ult da Raze no A.\"", "\"Acho que tem um no B, sei lá.\"", "\"Um no B main, não vi o agente.\""],
+    a: 2, e: "Call incerta e enrolada faz o time reagir a um chute e ocupa o canal. \"Pelo menos dois\" (A) também é estimativa, mas é concreta e ajuda a decidir. Não saber o agente (D) não tira o valor da info." },
+  { scene: "Utilidade como alarme", q: "Você é sentinela no ataque e deixou o fio no flanco. O fio quebra, mas ninguém aparece. O que fazer?",
+    o: ["Nada: ninguém apareceu, então foi só utilidade deles quebrando o fio", "Avisar \"fio quebrou no flanco\" e ficar olhando a rota", "Voltar sozinho pra checar quem quebrou antes de avisar o time", "Esperar ouvir passos pra avisar só quando tiver certeza"],
+    a: 1, e: "Fio quebrado é contato, mesmo sem ver ninguém: alguém está ali ou mandou utilidade pra limpar. Esperar passos (D) parece prudente, mas chega tarde. Voltar sozinho (C) te deixa sem trade." },
+  { scene: "Ult no plano", q: "Na compra, três do time estão com ult pronta. Como usar isso?",
+    o: ["Cada um usa a sua quando achar melhor, pra não ficar previsível", "Guardar todas pro próximo round, que é mais importante", "Avisar na compra e o IGL monta o execute em volta delas", "Usar as três logo no começo, pra garantir o round"],
+    a: 2, e: "Ult solta, cada uma numa hora (A), vale bem menos que ult combinada no mesmo execute. Guardar (B) às vezes faz sentido, mas é decisão do IGL, e pra isso ele precisa saber delas na compra." }
+];
+
+const LETTERS = ["A", "B", "C", "D"];
+const list = document.getElementById("questions");
+const form = document.getElementById("quiz");
+const resultBox = document.getElementById("result");
+const missing = document.getElementById("missing");
+const player = document.getElementById("player");
+const STORE = "licao-comms-v2";
+
+function render() {
+  list.innerHTML = "";
+  QUESTIONS.forEach((item, i) => {
+    const li = document.createElement("li");
+    li.className = "q";
+    li.id = "q" + (i + 1);
+    li.innerHTML = `
+      <div class="q-head"><span class="q-num">${String(i + 1).padStart(2, "0")}</span>
+        <div><div class="q-scene">${item.scene}</div><div class="q-text">${item.q}</div></div></div>
+      <div class="opts" role="radiogroup" aria-label="Pergunta ${i + 1}">
+        ${item.o.map((txt, j) => `
+          <label class="opt"><input type="radio" name="q${i}" id="q${i}o${j}" value="${j}"><span><b>${LETTERS[j]})</b> ${txt}</span></label>`).join("")}
+      </div>
+      <div class="feedback" hidden></div>`;
+    list.appendChild(li);
+  });
+}
+
+function load() {
+  try {
+    const s = JSON.parse(localStorage.getItem(STORE) || "{}");
+    if (s.player) player.value = s.player;
+    (s.answers || []).forEach((v, i) => {
+      if (v !== null && v !== undefined) { const el = document.getElementById(`q${i}o${v}`); if (el) el.checked = true; }
+    });
+  } catch (e) {}
+}
+function save() {
+  try {
+    localStorage.setItem(STORE, JSON.stringify({ player: player.value, answers: answers() }));
+  } catch (e) {}
+}
+function answers() {
+  return QUESTIONS.map((_, i) => {
+    const c = form.querySelector(`input[name="q${i}"]:checked`);
+    return c ? Number(c.value) : null;
+  });
+}
+
+function grade() {
+  const ans = answers();
+  const blank = ans.map((v, i) => v === null ? i + 1 : null).filter(Boolean);
+  if (blank.length) {
+    missing.textContent = `Faltam ${blank.length === 1 ? "a pergunta" : "as perguntas"} ${blank.join(", ")}.`;
+    missing.hidden = false;
+    document.getElementById("q" + blank[0]).scrollIntoView({ behavior: "smooth", block: "center" });
+    return;
+  }
+  missing.hidden = true;
+  let right = 0; const wrong = [];
+  QUESTIONS.forEach((item, i) => {
+    const li = document.getElementById("q" + (i + 1));
+    li.classList.add("graded");
+    li.querySelectorAll("input").forEach(inp => inp.disabled = true);
+    const ok = ans[i] === item.a;
+    if (ok) right++; else wrong.push(i + 1);
+    li.querySelectorAll(".opt").forEach((lab, j) => {
+      lab.classList.toggle("is-right", j === item.a);
+      lab.classList.toggle("is-wrong", !ok && j === ans[i]);
+    });
+    const fb = li.querySelector(".feedback");
+    fb.innerHTML = `<p class="verdict ${ok ? "ok" : "bad"}">${ok ? "✓ Acertou" : `✗ Errou. Resposta certa: ${LETTERS[item.a]}`}</p>
+      <p class="explain"><b>Por quê:</b> ${item.e}</p>`;
+    fb.hidden = false;
+  });
+  const total = QUESTIONS.length;
+  const pct = Math.round(right / total * 100);
+  let title, text;
+  if (pct === 100) { title = "Gabaritou. Pronto pro IGL"; text = "Você domina as funções e as calls. No treino, ajude quem errou."; }
+  else if (pct >= 80) { title = "Muito bom"; text = "Base sólida. Revise as perguntas que errou antes do próximo treino."; }
+  else if (pct >= 60) { title = "No caminho"; text = "Você pegou o principal. Releia o resumo nas partes que errou."; }
+  else { title = "Bora revisar"; text = "Leia o resumo de novo com calma e refaça a prova antes do treino."; }
+  document.getElementById("score").innerHTML = `${right}<small>/${total}</small>`;
+  document.getElementById("rank-title").textContent = `${title} · ${pct}%`;
+  document.getElementById("rank-text").textContent = text;
+  const nick = player.value.trim() || "(sem nick)";
+  document.getElementById("copytext").textContent =
+    `📋 Lição de casa: Comms e Utilidade\n${nick}: ${right}/${total} (${pct}%)\n` +
+    (wrong.length ? `Errei: ${wrong.join(", ")}` : "Gabaritei!");
+  resultBox.hidden = false;
+  requestAnimationFrame(() => { document.getElementById("bar").style.width = pct + "%"; });
+  resultBox.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+form.addEventListener("submit", e => { e.preventDefault(); grade(); });
+form.addEventListener("change", () => { save(); missing.hidden = true; });
+player.addEventListener("input", save);
+
+document.getElementById("copy").addEventListener("click", () => {
+  const txt = document.getElementById("copytext").textContent;
+  const msg = document.getElementById("copied");
+  const done = t => { msg.textContent = t; msg.hidden = false; };
+  const fallback = () => {
+    const r = document.createRange(); r.selectNodeContents(document.getElementById("copytext"));
+    const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+    done("Texto selecionado. Use Ctrl+C para copiar.");
+  };
+  try {
+    navigator.clipboard.writeText(txt).then(() => done("Copiado! Cole no grupo do time."), fallback);
+  } catch (e) { fallback(); }
+});
+
+document.getElementById("retry").addEventListener("click", () => {
+  try { localStorage.setItem(STORE, JSON.stringify({ player: player.value, answers: [] })); } catch (e) {}
+  render();
+  resultBox.hidden = true;
+  document.getElementById("bar").style.width = "0";
+  document.getElementById("copied").hidden = true;
+  document.getElementById("prova").scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+render();
+load();
+</script>
+
+</body></html>
